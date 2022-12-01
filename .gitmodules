@@ -2,3 +2,6 @@
 	path = test-repo
 	url = git@github.com:mpeddada1/test-repo.git
 	branch = another-branch
+[submodule "gax-java"]
+	path = gax-java
+	url = git@github.com:mpeddada1/gax-java.git
