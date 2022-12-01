@@ -5,3 +5,4 @@
 [submodule "gax-java"]
 	path = gax-java
 	url = git@github.com:mpeddada1/gax-java.git
+	branch = 22.3.0_update
