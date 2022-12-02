@@ -10,10 +10,6 @@ fi
 cd gax-java
 git checkout main
 
-# Get GAX_VERSION
-GAX_VERSION=$( ./gradlew -q :gax:properties | grep '^version: ' | cut -d' ' -f2 )
-echo "Gax version is $GAX_VERSION"
-
 if [ -z "$GRAALVM_VERSION" ]; then
   echo "Please provide GRAALVM_VERSION"
   exit 1
@@ -34,9 +30,25 @@ perl -i -0pe "$replacement_command" pom.xml
 # Push the dependency upgrade changes to branch on forked gax-java repo
 git add pom.xml
 git add dependencies.properties
+
+# If the current GAX version is a SNAPSHOT then there is no need to update the gax versions
+GAX_VERSION=$( ./gradlew -q :gax:properties | grep '^version: ' | cut -d' ' -f2 )
+echo "Gax version is $GAX_VERSION"
+if [[ ! $GAX_VERSION = *"SNAPSHOT"* ]]; then
+  GAX_ARRAY=(${GAX_VERSION//./ })
+  PATCH_VERSION=${GAX_ARRAY[2]}
+  NEXT_PATCH_VERSION="$(($PATCH_VERSION + 1))"
+  NEXT_GAX_VERSION="${GAX_ARRAY[0]}.${GAX_ARRAY[1]}.${NEXT_PATCH_VERSION}"
+  echo "Next gax version is $NEXT_GAX_VERSION"
+  grep -rl "${GAX_VERSION}" | xargs sed -i "s/${GAX_VERSION}/${NEXT_GAX_VERSION}-SNAPSHOT/g"
+fi
+
+git add *.gradle
+git add *.xml
+git add dependencies.properties
 git status
 git commit -m "chore: prepare gax-java for graalvm (${GRAALVM_VERSION}) upgrade"
-git push origin main
+git push origin "${GRAALVM_BRANCH}"
 
-# Put this in an echo
-echo "cd .. && git submodule set-branch --branch 22.4.0_update gax-java && git add gax-java && git add .gitmodules && git commit -m 'chore: add gax-java submodule' && git push origin main"
+echo "Before proceeding to the next step: In the github UI, create a draft PR from ${GRAALVM_BRANCH}"
+echo "cd .. && git submodule set-branch --branch ${GRAALVM_BRANCH} gax-java && git add gax-java && git add .gitmodules && git commit -m 'chore: add gax-java submodule' && git push origin main"

@@ -10,3 +10,6 @@
 	path = java-shared-config
 	url = git@github.com:mpeddada1/java-shared-config.git
 	branch = 0.9.17_update
+[submodule "java-shared-dependencies"]
+	path = java-shared-dependencies
+	url = git@github.com:mpeddada1/java-shared-dependencies.git
