@@ -7,30 +7,15 @@ if [ ! -d "java-shared-dependencies" ]; then
   git submodule add --force $REPO
 fi
 
-cd java-shared-config
-# Get the java-shared-config version
-
-cd ..
-cd gax-java
-
-# Get the gax-java version
-GAX_VERSION=$( ./gradlew -q :gax:properties | grep '^version: ' | cut -d' ' -f2 )
-echo "Gax version is $GAX_VERSION"
-
-cd ..
-cd java-shared-config
-SHARED_CONFIG_VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )
-echo "Java-shared-config version is $SHARED_CONFIG_VERSION"
-
 if [ -z "$GRAALVM_VERSION" ]; then
   echo "Please provide GRAALVM_VERSION"
   exit 1
 fi
 
-cd ..
+# Go into the java-shared-dependencies submodule and checkout a branch
 cd java-shared-dependencies
 GRAALVM_BRANCH="${GRAALVM_VERSION}_update"
-git checkout "${GRAALVM_BRANCH}"
+git checkout -b "${GRAALVM_BRANCH}"
 
 SHARED_DEPENDENCIES_VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )
 echo "Java-shared-dependencies version is $SHARED_DEPENDENCIES_VERSION"
@@ -45,6 +30,20 @@ if [[ ! $SHARED_DEPENDENCIES_VERSION = *"SNAPSHOT"* ]]; then
   grep -rl "${SHARED_DEPENDENCIES_VERSION}" | xargs sed -i "s/${SHARED_DEPENDENCIES_VERSION}/${NEXT_SHARED_DEP_VERSION}-SNAPSHOT/g"
 fi
 
+# Get the gax-java version
+cd ..
+cd gax-java
+GAX_VERSION=$( ./gradlew -q :gax:properties | grep '^version: ' | cut -d' ' -f2 )
+echo "Gax version is $GAX_VERSION"
+
+# Get the java-shared-config version
+cd ..
+cd java-shared-config
+SHARED_CONFIG_VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )
+echo "Java-shared-config version is $SHARED_CONFIG_VERSION"
+
+cd ..
+cd java-shared-dependencies
 function update_gax_versions() {
   # replace version
   xmllint --shell pom.xml << EOF
@@ -70,6 +69,7 @@ cd ..
 cd third-party-dependencies
 update_gax_versions
 
+# Go to java-shared-dependencies directory and commit changes
 cd ..
 git add pom.xml
 git add first-party-dependencies/pom.xml
@@ -77,3 +77,5 @@ git add third-party-dependencies/pom.xml
 git commit -m "chore: prepare shared-dependencies for (${GRAALVM_VERSION}) upgrade"
 git push origin "${GRAALVM_BRANCH}"
 
+echo "Before proceeding to the next step, create a draft PR from ${GRAALVM_BRANCH}"
+echo "git submodule set-branch --branch ${GRAALVM_BRANCH} java-shared-dependencies && git add java-shared-dependencies && git add .gitmodules && git commit -m 'chore: add java-shared-dependencies submodule' && git push origin main"

@@ -31,7 +31,7 @@ git add pom.xml
 git commit -m "chore: upgrade native maven plugin in preparation for graalvm upgrade"
 git push origin "${PLUGIN_BRANCH}"
 
-echo "Before proceeding to the next step: In the github UI, create a draft PR from ${PLUGIN_BRANCH}"
+echo "Before proceeding to the next step, create a draft PR from ${PLUGIN_BRANCH}"
 echo "git submodule set-branch --branch ${PLUGIN_BRANCH} java-shared-config && git add java-shared-config && git add .gitmodules && git commit -m 'chore: add java-shared-config submodule' && git push origin main"
 
 

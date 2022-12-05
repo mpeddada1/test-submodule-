@@ -50,5 +50,5 @@ git status
 git commit -m "chore: prepare gax-java for graalvm (${GRAALVM_VERSION}) upgrade"
 git push origin "${GRAALVM_BRANCH}"
 
-echo "Before proceeding to the next step: In the github UI, create a draft PR from ${GRAALVM_BRANCH}"
-echo "cd .. && git submodule set-branch --branch ${GRAALVM_BRANCH} gax-java && git add gax-java && git add .gitmodules && git commit -m 'chore: add gax-java submodule' && git push origin main"
+echo "Before proceeding to the next step, create a draft PR from ${GRAALVM_BRANCH}"
+echo "git submodule set-branch --branch ${GRAALVM_BRANCH} gax-java && git add gax-java && git add .gitmodules && git commit -m 'chore: add gax-java submodule' && git push origin main"
