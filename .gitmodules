@@ -17,3 +17,7 @@
 [submodule "java-bigquery"]
 	path = java-bigquery
 	url = git@github.com:mpeddada1/java-bigquery.git
+[submodule "google-cloud-java"]
+	path = google-cloud-java
+	url = git@github.com:mpeddada1/google-cloud-java.git
+	branch = 22.3.0_update
