@@ -44,7 +44,9 @@ echo "Java-shared-config version is $SHARED_CONFIG_VERSION"
 
 cd ..
 cd java-shared-dependencies
-function update_gax_versions() {
+
+# Function to replace shared-config and gax versions
+function update_versions() {
   # replace version
   xmllint --shell pom.xml << EOF
   setns x=http://maven.apache.org/POM/4.0.0
@@ -58,16 +60,16 @@ EOF
 }
 
 # Update gax version in parent pom.xml
-update_gax_versions
+update_versions
 
 # Update gax version in parent first-party-dependencies/pom.xml
 cd first-party-dependencies
-update_gax_versions
+update_versions
 
 # Update gax version in parent third-party-dependencies/pom.xml
 cd ..
 cd third-party-dependencies
-update_gax_versions
+update_versions
 
 # Go to java-shared-dependencies directory and commit changes
 cd ..

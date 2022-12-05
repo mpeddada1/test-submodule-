@@ -67,13 +67,3 @@ if [[ "$REPO" = *"google-cloud-java"* ]]; then
   echo "git submodule set-branch --branch ${GRAALVM_BRANCH} google-cloud-java && git add google-cloud-java && git add .gitmodules && git commit -m 'chore: add google-cloud-java submodule' && git push origin main"
 fi
 
-
-
-# Edit the shared-dependencies version in parent pom.xml
-
-#if [[ "$REPO_NAME" = *"google-cloud-java"* ]]; then
-#  git submodule add "${REPO}"
-#fi
-
-
-# Do something different for monorepo

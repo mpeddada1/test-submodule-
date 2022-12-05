@@ -8,7 +8,6 @@ if [ ! -d "java-shared-config" ]; then
 fi
 
 cd java-shared-config
-git checkout main
 
 if [ -z "${NATIVE_MAVEN_PLUGIN}" ]; then
   echo "Please specify the NATIVE_MAVEN_PLUGIN version"
