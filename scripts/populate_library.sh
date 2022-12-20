@@ -12,13 +12,13 @@ fi
 # Checkout graalvm update branch
 GRAALVM_BRANCH="${GRAALVM_VERSION}_update"
 
-cd gax-java
+cd gapic-generator-java/gax-java
 ./gradlew publishToMavenLocal
 
 # Get shared-dependencies version
-cd ..
+cd ../..
 cd java-shared-dependencies
-SHARED_DEPENDENCIES_VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )
+SHARED_DEPENDENCIES_VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout | sed 's/\[[0-9;]*[JKmsu]//g')
 echo ${SHARED_DEPENDENCIES_VERSION}
 
 # Go back to parent directory
@@ -60,7 +60,7 @@ if [[ "$REPO" = *"google-cloud-java"* ]]; then
   replacement_command="s/<artifactId>google-cloud-shared-dependencies<\/artifactId>\n        <version>.*<\/version>/<artifactId>google-cloud-shared-dependencies<\/artifactId>\n        <version>${SHARED_DEPENDENCIES_VERSION}<\/version>/g"
   perl -i -0pe "$replacement_command" google-cloud-jar-parent/pom.xml
   git add google-cloud-jar-parent/pom.xml
-  git commit -m "chore: prepare google-cloud-java for (${GRAALVM_VERSION}) upgrade"
+  git commit -m "chore: prepare google-cloud-java for GraalVM (${GRAALVM_VERSION}) upgrade"
   git push origin "${GRAALVM_BRANCH}"
 
   echo "Before proceeding to the next step, create a draft PR from ${GRAALVM_BRANCH}"

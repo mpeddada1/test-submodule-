@@ -7,7 +7,7 @@ if [ ! -d "gax-java" ]; then
   git submodule add --force $REPO
 fi
 
-cd gax-java
+cd gapic-generator-java/gax-java
 git checkout main
 
 if [ -z "$GRAALVM_VERSION" ]; then
@@ -27,7 +27,7 @@ sed -i "s/graal-sdk.*/graal-sdk:${GRAALVM_VERSION}/g" dependencies.properties
 replacement_command="s/<groupId>org.graalvm.sdk<\/groupId>\n        <artifactId>graal-sdk<\/artifactId>\n        <version>.*<\/version>/<groupId>org.graalvm.sdk<\/groupId>\n        <artifactId>graal-sdk<\/artifactId>\n        <version>${GRAALVM_VERSION}<\/version>/g"
 perl -i -0pe "$replacement_command" pom.xml
 
-# Push the dependency upgrade changes to branch on forked gax-java repo
+# Add the dependency upgrade changes to branch on forked gax-java repo
 git add pom.xml
 git add dependencies.properties
 
@@ -37,9 +37,11 @@ echo "Gax version is $GAX_VERSION"
 if [[ ! $GAX_VERSION = *"SNAPSHOT"* ]]; then
   GAX_ARRAY=(${GAX_VERSION//./ })
   PATCH_VERSION=${GAX_ARRAY[2]}
-  NEXT_PATCH_VERSION="$(($PATCH_VERSION + 1))"
+  NEXT_PATCH_VERSION="$((PATCH_VERSION + 1))"
   NEXT_GAX_VERSION="${GAX_ARRAY[0]}.${GAX_ARRAY[1]}.${NEXT_PATCH_VERSION}"
   echo "Next gax version is $NEXT_GAX_VERSION"
+
+  #  Modify all non-SNAPSHOT GAX versions to SNAPSHOT
   grep -rl "${GAX_VERSION}" | xargs sed -i "s/${GAX_VERSION}/${NEXT_GAX_VERSION}-SNAPSHOT/g"
 fi
 
@@ -51,4 +53,4 @@ git commit -m "chore: prepare gax-java for graalvm (${GRAALVM_VERSION}) upgrade"
 git push origin "${GRAALVM_BRANCH}"
 
 echo "Before proceeding to the next step, create a draft PR from ${GRAALVM_BRANCH}"
-echo "git submodule set-branch --branch ${GRAALVM_BRANCH} gax-java && git add gax-java && git add .gitmodules && git commit -m 'chore: add gax-java submodule' && git push origin main"
+echo "git submodule set-branch --branch ${GRAALVM_BRANCH} gapic-generator-java && git add gapic-generator-java && git add .gitmodules && git commit -m 'chore: add gapic-generator-java submodule' && git push origin main"
