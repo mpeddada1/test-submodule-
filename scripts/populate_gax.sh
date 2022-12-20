@@ -20,17 +20,6 @@ GRAALVM_BRANCH="${GRAALVM_VERSION}_update"
 git status
 git checkout -b "${GRAALVM_BRANCH}"
 
-# Replace graal-sdk version in dependencies.properties
-sed -i "s/graal-sdk.*/graal-sdk:${GRAALVM_VERSION}/g" dependencies.properties
-
-# Replace graal-sdk version in parent pom.xml
-replacement_command="s/<groupId>org.graalvm.sdk<\/groupId>\n        <artifactId>graal-sdk<\/artifactId>\n        <version>.*<\/version>/<groupId>org.graalvm.sdk<\/groupId>\n        <artifactId>graal-sdk<\/artifactId>\n        <version>${GRAALVM_VERSION}<\/version>/g"
-perl -i -0pe "$replacement_command" pom.xml
-
-# Add the dependency upgrade changes to branch on forked gax-java repo
-git add pom.xml
-git add dependencies.properties
-
 # If the current GAX version is a SNAPSHOT then there is no need to update the gax versions
 GAX_VERSION=$( ./gradlew -q :gax:properties | grep '^version: ' | cut -d' ' -f2 )
 echo "Gax version is $GAX_VERSION"
