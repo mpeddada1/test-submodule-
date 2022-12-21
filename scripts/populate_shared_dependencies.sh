@@ -74,5 +74,5 @@ git add third-party-dependencies/pom.xml
 git commit -m "chore: prepare shared-dependencies for GraalVM (${GRAALVM_VERSION}) upgrade"
 git push origin "${GRAALVM_BRANCH}"
 
-echo "Before proceeding to the next step, create a draft PR from ${GRAALVM_BRANCH}"
+echo "Before proceeding to the next step, create a draft PR from ${GRAALVM_BRANCH} within your forked repo."
 echo "git submodule set-branch --branch ${GRAALVM_BRANCH} java-shared-dependencies && git add java-shared-dependencies && git add .gitmodules && git commit -m 'chore: add java-shared-dependencies submodule' && git push origin main"

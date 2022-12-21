@@ -41,5 +41,5 @@ git status
 git commit -m "chore: prepare gax-java for graalvm (${GRAALVM_VERSION}) upgrade"
 git push origin "${GRAALVM_BRANCH}"
 
-echo "Before proceeding to the next step, create a draft PR from ${GRAALVM_BRANCH}"
+echo "Before proceeding to the next step, create a draft PR from ${GRAALVM_BRANCH} within your forked repo."
 echo "git submodule set-branch --branch ${GRAALVM_BRANCH} gapic-generator-java && git add gapic-generator-java && git add .gitmodules && git commit -m 'chore: add gapic-generator-java submodule' && git push origin main"

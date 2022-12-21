@@ -43,7 +43,7 @@ if [[ ! "$REPO" = *"google-cloud-java"* ]]; then
   git commit -m "chore: prepare $REPO_NAME for (${GRAALVM_VERSION}) upgrade"
   git push origin "${GRAALVM_BRANCH}"
 
-  echo "Before proceeding to the next step: In the github UI, create a draft PR from ${GRAALVM_BRANCH}"
+  echo "Before proceeding to the next step: In the github UI, create a draft PR from ${GRAALVM_BRANCH} within your forked repo."
   echo "git submodule set-branch --branch ${GRAALVM_BRANCH} ${REPO_NAME} && git add ${REPO_NAME} && git add .gitmodules && git commit -m 'chore: add ${REPO_NAME} submodule' && git push origin main"
 
 fi
@@ -63,7 +63,7 @@ if [[ "$REPO" = *"google-cloud-java"* ]]; then
   git commit -m "chore: prepare google-cloud-java for GraalVM (${GRAALVM_VERSION}) upgrade"
   git push origin "${GRAALVM_BRANCH}"
 
-  echo "Before proceeding to the next step, create a draft PR from ${GRAALVM_BRANCH}"
+  echo "Before proceeding to the next step, create a draft PR from ${GRAALVM_BRANCH} within your forked repo."
   echo "git submodule set-branch --branch ${GRAALVM_BRANCH} google-cloud-java && git add google-cloud-java && git add .gitmodules && git commit -m 'chore: add google-cloud-java submodule' && git push origin main"
 fi
 
