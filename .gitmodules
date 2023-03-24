@@ -21,3 +21,6 @@
 	path = google-cloud-java
 	url = git@github.com:mpeddada1/google-cloud-java.git
 	branch = 22.3.0_update
+[submodule "gapic-generator-java"]
+	path = gapic-generator-java
+	url = https://github.com/googleapis/gapic-generator-java.git
