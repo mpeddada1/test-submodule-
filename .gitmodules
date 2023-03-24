@@ -8,7 +8,7 @@
 	branch = 22.3.0_update
 [submodule "java-shared-config"]
 	path = java-shared-config
-	url = git@github.com:mpeddada1/java-shared-config.git
+	url = https://github.com/googleapis/java-shared-config.git
 	branch = 0.9.17_update
 [submodule "java-shared-dependencies"]
 	path = java-shared-dependencies
@@ -16,7 +16,7 @@
 	branch = 22.3.0_branch
 [submodule "java-bigquery"]
 	path = java-bigquery
-	url = git@github.com:mpeddada1/java-bigquery.git
+	url = https://github.com/googleapis/java-bigquery.git
 [submodule "google-cloud-java"]
 	path = google-cloud-java
 	url = git@github.com:mpeddada1/google-cloud-java.git
