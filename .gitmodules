@@ -24,3 +24,6 @@
 [submodule "gapic-generator-java"]
 	path = gapic-generator-java
 	url = https://github.com/googleapis/gapic-generator-java.git
+[submodule "java-pubsub"]
+	path = java-pubsub
+	url = https://github.com/googleapis/java-pubsub.git
