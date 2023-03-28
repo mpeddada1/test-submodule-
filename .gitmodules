@@ -27,3 +27,6 @@
 [submodule "java-pubsub"]
 	path = java-pubsub
 	url = https://github.com/googleapis/java-pubsub.git
+[submodule "java-bigtable"]
+	path = java-bigtable
+	url = https://github.com/googleapis/java-bigtable.git
