@@ -32,6 +32,7 @@ pwd
 # TODO(mpeddada): Undo this change when this script is ready. This will be passed as an argument.
 GRAALVM_VERSION=22.2.0
 NATIVE_MAVEN_PLUGIN=0.9.21
+GRAALVM_BRANCH="${GRAALVM_VERSION}_update"
 
 # Use GCP Maven Mirror
 mkdir -p "${HOME}/.m2"
@@ -65,14 +66,13 @@ mvn -B -ntp install --projects '!gapic-generator-java' \
   -Dcheckstyle.skip -Dfmt.skip -DskipTests -Denforcer.skip
 
 git diff
-
-#git checkout -b graalvm-submodule-test2
-#git add gax-java/pom.xml
-#git commit -m "chore: update graalvm-sdk's version in GAX for testing"
-#git push origin graalvm-submodule-test2
+git checkout -b "${GRAALVM_BRANCH}"
+git add gax-java/pom.xml
+git commit -m "chore: update graalvm-sdk's version in GAX for testing"
+git push origin "${GRAALVM_BRANCH}"
 popd
 
-### Round 2: Add java-shared-config if not present and update native-maven-plugin's version
+## Round 2: Add java-shared-config if not present and update native-maven-plugin's version
 if [ ! -d "java-shared-config" ]; then
   echo "Create java-shared-config submodule if one does not exist"
   git submodule add --force https://github.com/googleapis/java-shared-config.git
@@ -80,8 +80,6 @@ fi
 
 # Modify junit-platform-native and native-maven-plugin
 pushd java-shared-config
-ls
-pwd
 SHARED_CONFIG_VERSION=$(sed -e 's/xmlns=".*"//' pom.xml | xmllint --xpath '/project/version/text()' -)
 
 xmllint --shell pom.xml <<EOF
@@ -105,14 +103,13 @@ git diff
 mvn install
 
 # Create branch on github
-git checkout -b graalvm-submodule-test2
+git checkout -b "${GRAALVM_BRANCH}"
 git add pom.xml
 git commit -m "chore: update native-maven-plugin's version in java-shared-config for testing"
-git push origin graalvm-submodule-test2
-
+git push origin "${GRAALVM_BRANCH}"
 popd
 
-### Round 3: Add java-pubsub if not present and update versions of shared-dependencies and java-shared-config.
+## Round 3: Add java-pubsub if not present and update versions of shared-dependencies and java-shared-config.
 if [ ! -d "java-pubsub" ]; then
   echo "Create java-pubsub submodule if one does not exist"
   git submodule add --force https://github.com/googleapis/java-pubsub.git
@@ -129,10 +126,9 @@ git checkout -b graalvm-submodule-test2
 git add pom.xml
 git commit -m "chore: update shared-dependencies version for testing"
 git push origin graalvm-submodule-test2
-
 popd
 
-### Round 4: Add java-bigquery if not present and update versions of shared-dependencies and java-shared-config.
+## Round 4: Add java-bigquery if not present and update versions of shared-dependencies and java-shared-config.
 if [ ! -d "java-bigquery" ]; then
   echo "Create java-bigquery submodule if one does not exist"
   git submodule add --force https://github.com/googleapis/java-bigquery.git
@@ -144,31 +140,64 @@ modify_shared_config
 modify_shared_dependencies
 echo "Modified shared-config and shared-dependencies versions in java-bigquery"
 git diff
-
-git checkout -b graalvm-submodule-test2
+git checkout -b "${GRAALVM_BRANCH}"
 git add pom.xml
 git commit -m "chore: update shared-dependencies version for testing"
-git push origin graalvm-submodule-test2
+git push origin "${GRAALVM_BRANCH}"
 popd
 
 ### Round 5: Add java-bigtable if not present and update versions of shared-dependencies and java-shared-config.
-#if [ ! -d "java-bigtable" ]; then
-#  echo "Create java-bigtable submodule if one does not exist"
-#  git submodule add --force https://github.com/googleapis/java-bigtable.git
-#fi
-#
-## Update shared-config and shared-dependencies version
-#pushd java-bigtable
-#modify_shared_config
-#modify_shared_dependencies
-#echo "Modified shared-config and shared-dependencies versions in java-bigtable"
-#git diff
-#popd
+if [ ! -d "java-bigtable" ]; then
+  echo "Create java-bigtable submodule if one does not exist"
+  git submodule add --force https://github.com/googleapis/java-bigtable.git
+fi
 
+# Update shared-config and shared-dependencies version
+pushd java-bigtable/google-cloud-bigtable-deps-bom
+modify_shared_config
+modify_shared_dependencies
+
+popd
+pushd java-bigtable/google-cloud-bigtable-bom
+modify_shared_config
+
+popd
+pushd java-bigtable
+modify_shared_config
+
+echo "Modified shared-config and shared-dependencies versions in java-bigtable"
+git diff
+
+git checkout -b "${GRAALVM_BRANCH}"
+git add pom.xml
+git commit -m "chore: update shared-dependencies version for testing"
+git push origin "${GRAALVM_BRANCH}"
+popd
+
+## Round 6: Add java-spanner-jdbc if not present and update versions of shared-dependencies and java-shared-config.
+if [ ! -d "java-spanner-jdbc" ]; then
+  echo "Create java-spanner-jdbc submodule if one does not exist"
+  git submodule add --force https://github.com/googleapis/java-spanner-jdbc.git
+fi
+
+# Update shared-config and shared-dependencies version
+pushd java-spanner-jdbc
+modify_shared_config
+modify_shared_dependencies
+echo "Modified shared-config and shared-dependencies versions in java-spanner-jdbc"
+git diff
+
+git checkout -b "${GRAALVM_BRANCH}"
+git add pom.xml
+git commit -m "chore: update shared-dependencies version for testing"
+git push origin "${GRAALVM_BRANCH}"
+popd
 
 git add gapic-generator-java
 git add java-shared-config
 git add java-pubsub
 git add java-bigquery
+git add java-bigtable
+git add java-spanner-jdbc
 git commit -m "chore: populate the submodule project"
 git push origin main
