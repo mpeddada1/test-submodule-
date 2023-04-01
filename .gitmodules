@@ -1,1 +1,3 @@
-
+[submodule "gapic-generator-java"]
+	path = gapic-generator-java
+	url = https://github.com/mpeddada1/gapic-generator-java.git
